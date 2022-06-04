@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.SeatMapper">
+    
+    <resultMap type="Seat" id="SeatResult">
+        <result property="seatid"    column="seatid"    />
+        <result property="name"    column="name"    />
+        <result property="idcard"    column="idcard"    />
+        <result property="phone"    column="phone"    />
+    </resultMap>
+
+    <sql id="selectSeatVo">
+        select seatid, name, idcard, phone from seat
+    </sql>
+
+    <select id="selectSeatList" parameterType="Seat" resultMap="SeatResult">
+        <include refid="selectSeatVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="idcard != null  and idcard != ''"> and idcard = #{idcard}</if>
+            <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
+        </where>
+    </select>
+    
+    <select id="selectSeatBySeatid" parameterType="Long" resultMap="SeatResult">
+        <include refid="selectSeatVo"/>
+        where seatid = #{seatid}
+    </select>
+        
+    <insert id="insertSeat" parameterType="Seat">
+        insert into seat
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="seatid != null">seatid,</if>
+            <if test="name != null and name != ''">name,</if>
+            <if test="idcard != null and idcard != ''">idcard,</if>
+            <if test="phone != null and phone != ''">phone,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="seatid != null">#{seatid},</if>
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="idcard != null and idcard != ''">#{idcard},</if>
+            <if test="phone != null and phone != ''">#{phone},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSeat" parameterType="Seat">
+        update seat
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="idcard != null and idcard != ''">idcard = #{idcard},</if>
+            <if test="phone != null and phone != ''">phone = #{phone},</if>
+        </trim>
+        where seatid = #{seatid}
+    </update>
+
+    <delete id="deleteSeatBySeatid" parameterType="Long">
+        delete from seat where seatid = #{seatid}
+    </delete>
+
+    <delete id="deleteSeatBySeatids" parameterType="String">
+        delete from seat where seatid in 
+        <foreach item="seatid" collection="array" open="(" separator="," close=")">
+            #{seatid}
+        </foreach>
+    </delete>
+</mapper>

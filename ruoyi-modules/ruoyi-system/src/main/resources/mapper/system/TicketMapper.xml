@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.TicketMapper">
+    
+    <resultMap type="Ticket" id="TicketResult">
+        <result property="ticketid"    column="ticketid"    />
+        <result property="flightid"    column="flightid"    />
+        <result property="departure"    column="departure"    />
+        <result property="departuretime"    column="departuretime"    />
+        <result property="free"    column="free"    />
+        <result property="seatid"    column="seatid"    />
+        <result property="discount"    column="discount"    />
+        <result property="price"    column="price"    />
+        <result property="book"    column="book"    />
+        <result property="buy"    column="buy"    />
+    </resultMap>
+
+    <sql id="selectTicketVo">
+        select ticketid, flightid, departure, departuretime, free, seatid, discount, price, book, buy from ticket
+    </sql>
+
+    <select id="selectTicketList" parameterType="Ticket" resultMap="TicketResult">
+        <include refid="selectTicketVo"/>
+        <where>  
+            <if test="flightid != null "> and flightid = #{flightid}</if>
+            <if test="departure != null  and departure != ''"> and departure = #{departure}</if>
+            <if test="departuretime != null "> and departuretime = #{departuretime}</if>
+            <if test="free != null  and free != ''"> and free = #{free}</if>
+            <if test="discount != null  and discount != ''"> and discount = #{discount}</if>
+            <if test="price != null "> and price = #{price}</if>
+            <if test="book != null  and book != ''"> and book = #{book}</if>
+            <if test="buy != null  and buy != ''"> and buy = #{buy}</if>
+        </where>
+    </select>
+    
+    <select id="selectTicketByTicketid" parameterType="Long" resultMap="TicketResult">
+        <include refid="selectTicketVo"/>
+        where ticketid = #{ticketid}
+    </select>
+        
+    <insert id="insertTicket" parameterType="Ticket" useGeneratedKeys="true" keyProperty="ticketid">
+        insert into ticket
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="flightid != null">flightid,</if>
+            <if test="departure != null">departure,</if>
+            <if test="departuretime != null">departuretime,</if>
+            <if test="free != null">free,</if>
+            <if test="seatid != null">seatid,</if>
+            <if test="discount != null">discount,</if>
+            <if test="price != null">price,</if>
+            <if test="book != null">book,</if>
+            <if test="buy != null">buy,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="flightid != null">#{flightid},</if>
+            <if test="departure != null">#{departure},</if>
+            <if test="departuretime != null">#{departuretime},</if>
+            <if test="free != null">#{free},</if>
+            <if test="seatid != null">#{seatid},</if>
+            <if test="discount != null">#{discount},</if>
+            <if test="price != null">#{price},</if>
+            <if test="book != null">#{book},</if>
+            <if test="buy != null">#{buy},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTicket" parameterType="Ticket">
+        update ticket
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="flightid != null">flightid = #{flightid},</if>
+            <if test="departure != null">departure = #{departure},</if>
+            <if test="departuretime != null">departuretime = #{departuretime},</if>
+            <if test="free != null">free = #{free},</if>
+            <if test="seatid != null">seatid = #{seatid},</if>
+            <if test="discount != null">discount = #{discount},</if>
+            <if test="price != null">price = #{price},</if>
+            <if test="book != null">book = #{book},</if>
+            <if test="buy != null">buy = #{buy},</if>
+        </trim>
+        where ticketid = #{ticketid}
+    </update>
+
+    <delete id="deleteTicketByTicketid" parameterType="Long">
+        delete from ticket where ticketid = #{ticketid}
+    </delete>
+
+    <delete id="deleteTicketByTicketids" parameterType="String">
+        delete from ticket where ticketid in 
+        <foreach item="ticketid" collection="array" open="(" separator="," close=")">
+            #{ticketid}
+        </foreach>
+    </delete>
+</mapper>
