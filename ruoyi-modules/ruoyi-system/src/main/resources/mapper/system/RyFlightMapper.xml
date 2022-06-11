@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.RyFlightMapper">
+    
+    <resultMap type="RyFlight" id="RyFlightResult">
+        <result property="flightno"    column="flightNo"    />
+        <result property="aircrafttype"    column="aircraftType"    />
+        <result property="departdate"    column="departDate"    />
+        <result property="departtime"    column="departTime"    />
+        <result property="arrivetime"    column="arriveTime"    />
+        <result property="departurecityname"    column="departureCityName"    />
+        <result property="departportname"    column="departPortName"    />
+        <result property="arrivecityname"    column="arriveCityName"    />
+    </resultMap>
+
+    <sql id="selectRyFlightVo">
+        select flightNo, aircraftType, departDate, departTime, arriveTime, departureCityName, departPortName, arriveCityName from ry_flight 
+    </sql>
+
+    <select id="selectRyFlightList" parameterType="RyFlight" resultMap="RyFlightResult">
+        <include refid="selectRyFlightVo"/>
+        <where>  
+            <if test="flightno != null  and flightno != ''"> and flightNo = #{flightno}</if>
+            <if test="aircrafttype != null  and aircrafttype != ''"> and aircraftType = #{aircrafttype}</if>
+            <if test="departdate != null  and departdate != ''"> and departDate = #{departdate}</if>
+            <if test="departtime != null  and departtime != ''"> and departTime = #{departtime}</if>
+            <if test="arrivetime != null  and arrivetime != ''"> and arriveTime = #{arrivetime}</if>
+            <if test="departurecityname != null  and departurecityname != ''"> and departureCityName like concat('%', #{departurecityname}, '%')</if>
+            <if test="departportname != null  and departportname != ''"> and departPortName like concat('%', #{departportname}, '%')</if>
+            <if test="arrivecityname != null  and arrivecityname != ''"> and arriveCityName like concat('%', #{arrivecityname}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectRyFlightByFlightno" parameterType="String" resultMap="RyFlightResult">
+        <include refid="selectRyFlightVo"/>
+        where flightNo = #{flightno}
+    </select>
+        
+    <insert id="insertRyFlight" parameterType="RyFlight">
+        insert into ry_flight
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="flightno != null">flightNo,</if>
+            <if test="aircrafttype != null">aircraftType,</if>
+            <if test="departdate != null">departDate,</if>
+            <if test="departtime != null">departTime,</if>
+            <if test="arrivetime != null">arriveTime,</if>
+            <if test="departurecityname != null">departureCityName,</if>
+            <if test="departportname != null">departPortName,</if>
+            <if test="arrivecityname != null">arriveCityName,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="flightno != null">#{flightno},</if>
+            <if test="aircrafttype != null">#{aircrafttype},</if>
+            <if test="departdate != null">#{departdate},</if>
+            <if test="departtime != null">#{departtime},</if>
+            <if test="arrivetime != null">#{arrivetime},</if>
+            <if test="departurecityname != null">#{departurecityname},</if>
+            <if test="departportname != null">#{departportname},</if>
+            <if test="arrivecityname != null">#{arrivecityname},</if>
+         </trim>
+    </insert>
+
+    <update id="updateRyFlight" parameterType="RyFlight">
+        update ry_flight
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="aircrafttype != null">aircraftType = #{aircrafttype},</if>
+            <if test="departdate != null">departDate = #{departdate},</if>
+            <if test="departtime != null">departTime = #{departtime},</if>
+            <if test="arrivetime != null">arriveTime = #{arrivetime},</if>
+            <if test="departurecityname != null">departureCityName = #{departurecityname},</if>
+            <if test="departportname != null">departPortName = #{departportname},</if>
+            <if test="arrivecityname != null">arriveCityName = #{arrivecityname},</if>
+        </trim>
+        where flightNo = #{flightno}
+		
+    </update>
+
+    <delete id="deleteRyFlightByFlightno" parameterType="String">
+        delete from ry_flight where flightNo = #{flightno}
+    </delete>
+
+    <delete id="deleteRyFlightByFlightnos" parameterType="String">
+        delete from ry_flight where flightNo in 
+        <foreach item="flightno" collection="array" open="(" separator="," close=")">
+            #{flightno}
+        </foreach>
+    </delete>
+</mapper>
