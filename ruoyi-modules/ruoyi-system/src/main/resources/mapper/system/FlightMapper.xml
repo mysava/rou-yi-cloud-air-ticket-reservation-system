@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.FlightMapper">
+    
+    <resultMap type="Flight" id="FlightResult">
+        <result property="flightid"    column="flightid"    />
+        <result property="flightno"    column="flightNo"    />
+        <result property="aircrafttype"    column="aircraftType"    />
+        <result property="departdate"    column="departDate"    />
+        <result property="departtime"    column="departTime"    />
+        <result property="arrivetime"    column="arriveTime"    />
+        <result property="departurecityname"    column="departureCityName"    />
+        <result property="arrivecityname"    column="arriveCityName"    />
+        <result property="vipNum"    column="vip_num"    />
+        <result property="comNum"    column="com_num"    />
+        <result property="vipPrice"    column="vip_price"    />
+        <result property="comPrice"    column="com_price"    />
+    </resultMap>
+
+    <sql id="selectFlightVo">
+        select flightid, flightNo, aircraftType, departDate, departTime, arriveTime, departureCityName, arriveCityName, vip_num, com_num, vip_price, com_price from ry_flight
+    </sql>
+
+    <select id="selectFlightList" parameterType="Flight" resultMap="FlightResult">
+        <include refid="selectFlightVo"/>
+        <where>  
+            <if test="flightno != null  and flightno != ''"> and flightNo = #{flightno}</if>
+            <if test="aircrafttype != null  and aircrafttype != ''"> and aircraftType = #{aircrafttype}</if>
+            <if test="departdate != null  and departdate != ''"> and departDate = #{departdate}</if>
+            <if test="departtime != null  and departtime != ''"> and departTime = #{departtime}</if>
+            <if test="arrivetime != null  and arrivetime != ''"> and arriveTime = #{arrivetime}</if>
+            <if test="departurecityname != null  and departurecityname != ''"> and departureCityName like concat('%', #{departurecityname}, '%')</if>
+            <if test="arrivecityname != null  and arrivecityname != ''"> and arriveCityName like concat('%', #{arrivecityname}, '%')</if>
+            <if test="vipNum != null "> and vip_num = #{vipNum}</if>
+            <if test="comNum != null "> and com_num = #{comNum}</if>
+            <if test="vipPrice != null  and vipPrice != ''"> and vip_price = #{vipPrice}</if>
+            <if test="comPrice != null  and comPrice != ''"> and com_price = #{comPrice}</if>
+        </where>
+    </select>
+    
+    <select id="selectFlightByFlightid" parameterType="Long" resultMap="FlightResult">
+        <include refid="selectFlightVo"/>
+        where flightid = #{flightid}
+    </select>
+        
+    <insert id="insertFlight" parameterType="Flight" useGeneratedKeys="true" keyProperty="flightid">
+        insert into ry_flight
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="flightno != null">flightNo,</if>
+            <if test="aircrafttype != null">aircraftType,</if>
+            <if test="departdate != null and departdate != ''">departDate,</if>
+            <if test="departtime != null">departTime,</if>
+            <if test="arrivetime != null">arriveTime,</if>
+            <if test="departurecityname != null and departurecityname != ''">departureCityName,</if>
+            <if test="arrivecityname != null and arrivecityname != ''">arriveCityName,</if>
+            <if test="vipNum != null">vip_num,</if>
+            <if test="comNum != null">com_num,</if>
+            <if test="vipPrice != null">vip_price,</if>
+            <if test="comPrice != null">com_price,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="flightno != null">#{flightno},</if>
+            <if test="aircrafttype != null">#{aircrafttype},</if>
+            <if test="departdate != null and departdate != ''">#{departdate},</if>
+            <if test="departtime != null">#{departtime},</if>
+            <if test="arrivetime != null">#{arrivetime},</if>
+            <if test="departurecityname != null and departurecityname != ''">#{departurecityname},</if>
+            <if test="arrivecityname != null and arrivecityname != ''">#{arrivecityname},</if>
+            <if test="vipNum != null">#{vipNum},</if>
+            <if test="comNum != null">#{comNum},</if>
+            <if test="vipPrice != null">#{vipPrice},</if>
+            <if test="comPrice != null">#{comPrice},</if>
+         </trim>
+    </insert>
+
+    <update id="updateFlight" parameterType="Flight">
+        update ry_flight
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="flightno != null">flightNo = #{flightno},</if>
+            <if test="aircrafttype != null">aircraftType = #{aircrafttype},</if>
+            <if test="departdate != null and departdate != ''">departDate = #{departdate},</if>
+            <if test="departtime != null">departTime = #{departtime},</if>
+            <if test="arrivetime != null">arriveTime = #{arrivetime},</if>
+            <if test="departurecityname != null and departurecityname != ''">departureCityName = #{departurecityname},</if>
+            <if test="arrivecityname != null and arrivecityname != ''">arriveCityName = #{arrivecityname},</if>
+            <if test="vipNum != null">vip_num = #{vipNum},</if>
+            <if test="comNum != null">com_num = #{comNum},</if>
+            <if test="vipPrice != null">vip_price = #{vipPrice},</if>
+            <if test="comPrice != null">com_price = #{comPrice},</if>
+        </trim>
+        where flightid = #{flightid}
+    </update>
+
+    <delete id="deleteFlightByFlightid" parameterType="Long">
+        delete from ry_flight where flightid = #{flightid}
+    </delete>
+
+    <delete id="deleteFlightByFlightids" parameterType="String">
+        delete from ry_flight where flightid in 
+        <foreach item="flightid" collection="array" open="(" separator="," close=")">
+            #{flightid}
+        </foreach>
+    </delete>
+</mapper>
