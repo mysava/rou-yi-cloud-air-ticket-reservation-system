@@ -102,4 +102,12 @@ public class FlightController extends BaseController
     {
         return toAjax(flightService.deleteFlightByFlightids(flightids));
     }
+
+    /**
+     * 预订flight
+     */
+    @RequiresPermissions("system:flight:book")
+    @Log(title = "flight", businessType = BusinessType.UPDATE)
+    @PatchMapping
+    public AjaxResult book(@RequestBody Flight flight) { return toAjax(flightService.bookFlight(flight)); }
 }
