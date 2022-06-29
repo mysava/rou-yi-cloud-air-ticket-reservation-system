@@ -58,4 +58,12 @@ public interface IFlightService
      * @return 结果
      */
     public int deleteFlightByFlightid(Long flightid);
+
+        /**
+     * 预订flight
+     *
+     * @param flight flight
+     * @return 结果
+     */
+    public int bookFlight(Flight flight);
 }
