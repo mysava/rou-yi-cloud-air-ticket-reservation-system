@@ -90,4 +90,14 @@ public class FlightServiceImpl implements IFlightService
     {
         return flightMapper.deleteFlightByFlightid(flightid);
     }
+
+     /**
+     * 预订flight
+     *
+     * @param flight flight
+     * @return 结果
+     */
+    @Override
+    public int bookFlight(Flight flight) { return flightMapper.bookFlight(flight); }
+
 }
