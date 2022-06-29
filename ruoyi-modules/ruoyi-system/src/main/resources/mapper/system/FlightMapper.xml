@@ -103,4 +103,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{flightid}
         </foreach>
     </delete>
+    <update id="bookFlight" parameterType="Flight">
+        update ry_flight
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="vipNumChange != null and vipNumChange &gt; 0 ">vip_num_change = #{vipNumChange}-1,</if>
+            <if test="comNumChange != null and comNumChange &gt; 0 ">com_num_change = #{comNumChange}-1,</if>
+        </trim>
+        where flightid = #{flightid}
+    </update>
+
 </mapper>
