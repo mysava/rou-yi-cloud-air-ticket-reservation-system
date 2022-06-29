@@ -58,4 +58,12 @@ public interface FlightMapper
      * @return 结果
      */
     public int deleteFlightByFlightids(Long[] flightids);
+
+      /**
+     * 预订flight
+     *
+     * @param flight flight
+     * @return 结果
+     */
+    public int bookFlight(Flight flight);
 }
