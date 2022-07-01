@@ -174,8 +174,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  		)
 	</insert>
 	
-
-
 	<update id="updateUser" parameterType="SysUser">
  		update sys_user
  		<set>
@@ -219,9 +217,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  			#{userId}
         </foreach> 
  	</delete>
-	
+
 	<insert id="insertrole" parameterType="SysUser">
-			insert into sys_user_role (user_id,role_id) values (#{userId},101)
-		</insert>
-	
+		insert into sys_user_role (user_id,role_id) values (#{userId},3)
+	</insert>
 </mapper> 

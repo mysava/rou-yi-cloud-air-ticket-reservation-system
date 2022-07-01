@@ -559,10 +559,10 @@ public class SysUserServiceImpl implements ISysUserService
         }
         return successMsg.toString();
     }
-	
-	
-	public int insertrole(long userId) {
-	        return userMapper.insertrole(userId);
-	    }
+
+    @Override
+    public int insertrole(long userId) {
+        return userMapper.insertrole(userId);
+    }
 
 }

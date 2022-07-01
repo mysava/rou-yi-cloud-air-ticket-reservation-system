@@ -124,7 +124,9 @@ public interface SysUserMapper
      * @return 结果
      */
     public SysUser checkEmailUnique(String email);
-	
-	public int insertrole(long userId);
-	
+
+    //分配角色
+    public int insertrole(long userId);
+
+
 }

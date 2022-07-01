@@ -203,8 +203,7 @@ public interface ISysUserService
      * @return 结果
      */
     public String importUser(List<SysUser> userList, Boolean isUpdateSupport, String operName);
-	
-	
-	
-	public int insertrole(long userId);
+
+    //注册分配角色
+    public int insertrole(long userId);
 }

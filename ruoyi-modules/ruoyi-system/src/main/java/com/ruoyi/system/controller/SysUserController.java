@@ -142,10 +142,10 @@ public class SysUserController extends BaseController
         {
             return R.fail("保存用户'" + username + "'失败，注册账号已存在");
         }
-       userService.registerUser(sysUser);
-               userService.insertrole(sysUser.getUserId());//分配角色
-       
-               return R.ok(true);
+        userService.registerUser(sysUser);
+        userService.insertrole(sysUser.getUserId());//分配角色
+
+        return R.ok(true);
     }
 
     /**
