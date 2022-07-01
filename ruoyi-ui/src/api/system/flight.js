@@ -1,6 +1,6 @@
 import request from '@/utils/request'
 
-// 查询flight列表
+// 查询航班管理列表
 export function listFlight(query) {
   return request({
     url: '/system/flight/list',
@@ -9,7 +9,7 @@ export function listFlight(query) {
   })
 }
 
-// 查询flight详细
+// 查询航班管理详细
 export function getFlight(flightid) {
   return request({
     url: '/system/flight/' + flightid,
@@ -17,7 +17,7 @@ export function getFlight(flightid) {
   })
 }
 
-// 新增flight
+// 新增航班管理
 export function addFlight(data) {
   return request({
     url: '/system/flight',
@@ -26,7 +26,7 @@ export function addFlight(data) {
   })
 }
 
-// 修改flight
+// 修改航班管理
 export function updateFlight(data) {
   return request({
     url: '/system/flight',
@@ -35,19 +35,10 @@ export function updateFlight(data) {
   })
 }
 
-// 删除flight
+// 删除航班管理
 export function delFlight(flightid) {
   return request({
     url: '/system/flight/' + flightid,
     method: 'delete'
-  })
-}
-
-// 预订flight
-export function bookFlight(data) {
-  return request({
-    url: '/system/flight',
-    method: 'Patch',
-    data: data
   })
 }

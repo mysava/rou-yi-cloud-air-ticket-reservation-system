@@ -8,10 +8,10 @@ import com.ruoyi.system.domain.Tickets;
 import com.ruoyi.system.service.ITicketsService;
 
 /**
- * 机票管理Service业务层处理
+ * 订单管理Service业务层处理
  * 
  * @author ruoyi
- * @date 2022-06-22
+ * @date 2022-06-21
  */
 @Service
 public class TicketsServiceImpl implements ITicketsService 
@@ -20,10 +20,10 @@ public class TicketsServiceImpl implements ITicketsService
     private TicketsMapper ticketsMapper;
 
     /**
-     * 查询机票管理
+     * 查询订单管理
      * 
-     * @param ticketId 机票管理主键
-     * @return 机票管理
+     * @param ticketId 订单管理主键
+     * @return 订单管理
      */
     @Override
     public Tickets selectTicketsByTicketId(Long ticketId)
@@ -32,10 +32,10 @@ public class TicketsServiceImpl implements ITicketsService
     }
 
     /**
-     * 查询机票管理列表
+     * 查询订单管理列表
      * 
-     * @param tickets 机票管理
-     * @return 机票管理
+     * @param tickets 订单管理
+     * @return 订单管理
      */
     @Override
     public List<Tickets> selectTicketsList(Tickets tickets)
@@ -44,9 +44,9 @@ public class TicketsServiceImpl implements ITicketsService
     }
 
     /**
-     * 新增机票管理
+     * 新增订单管理
      * 
-     * @param tickets 机票管理
+     * @param tickets 订单管理
      * @return 结果
      */
     @Override
@@ -56,9 +56,9 @@ public class TicketsServiceImpl implements ITicketsService
     }
 
     /**
-     * 修改机票管理
+     * 修改订单管理
      * 
-     * @param tickets 机票管理
+     * @param tickets 订单管理
      * @return 结果
      */
     @Override
@@ -68,9 +68,9 @@ public class TicketsServiceImpl implements ITicketsService
     }
 
     /**
-     * 批量删除机票管理
+     * 批量删除订单管理
      * 
-     * @param ticketIds 需要删除的机票管理主键
+     * @param ticketIds 需要删除的订单管理主键
      * @return 结果
      */
     @Override
@@ -80,9 +80,9 @@ public class TicketsServiceImpl implements ITicketsService
     }
 
     /**
-     * 删除机票管理信息
+     * 删除订单管理信息
      * 
-     * @param ticketId 机票管理主键
+     * @param ticketId 订单管理主键
      * @return 结果
      */
     @Override

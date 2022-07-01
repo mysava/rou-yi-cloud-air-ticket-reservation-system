@@ -1,6 +1,6 @@
 import request from '@/utils/request'
 
-// 查询机票管理列表
+// 查询订单管理列表
 export function listTickets(query) {
   return request({
     url: '/system/tickets/list',
@@ -9,7 +9,7 @@ export function listTickets(query) {
   })
 }
 
-// 查询机票管理详细
+// 查询订单管理详细
 export function getTickets(ticketId) {
   return request({
     url: '/system/tickets/' + ticketId,
@@ -17,16 +17,24 @@ export function getTickets(ticketId) {
   })
 }
 
-// 新增机票管理
-export function addTickets(data) {
+// 新增订单管理
+export function addTickets(data,flightid) {
   return request({
-    url: '/system/tickets',
+    url: '/system/tickets/'+flightid,
     method: 'post',
     data: data
   })
 }
 
-// 修改机票管理
+export function alterTickets(data,ticketId) {
+  return request({
+    url: '/system/tickets/alter/'+ ticketId,
+    method: 'post',
+    data: data
+  })
+}
+
+// 修改订单管理
 export function updateTickets(data) {
   return request({
     url: '/system/tickets',
@@ -35,7 +43,7 @@ export function updateTickets(data) {
   })
 }
 
-// 删除机票管理
+// 删除订单管理
 export function delTickets(ticketId) {
   return request({
     url: '/system/tickets/' + ticketId,

@@ -6,17 +6,21 @@ import com.ruoyi.common.core.annotation.Excel;
 import com.ruoyi.common.core.web.domain.BaseEntity;
 
 /**
- * 机票管理对象 tickets
- * 
+ * 订单管理对象 tickets
+ *
  * @author ruoyi
- * @date 2022-06-22
+ * @date 2022-06-30
  */
-public class Tickets extends BaseEntity
+public class Tickets extends TicketsHistory
 {
     private static final long serialVersionUID = 1L;
 
     /** 机票编号 */
     private Long ticketId;
+
+    /** 编号 */
+    @Excel(name = "编号")
+    private String flightid;
 
     /** 乘客姓名 */
     @Excel(name = "乘客姓名")
@@ -54,93 +58,102 @@ public class Tickets extends BaseEntity
     @Excel(name = "座位号")
     private String seat;
 
-    public void setTicketId(Long ticketId) 
+    public void setTicketId(Long ticketId)
     {
         this.ticketId = ticketId;
     }
 
-    public Long getTicketId() 
+    public Long getTicketId()
     {
         return ticketId;
     }
-    public void setPname(String pname) 
+    public void setFlightid(String flightid)
+    {
+        this.flightid = flightid;
+    }
+
+    public String getFlightid()
+    {
+        return flightid;
+    }
+    public void setPname(String pname)
     {
         this.pname = pname;
     }
 
-    public String getPname() 
+    public String getPname()
     {
         return pname;
     }
-    public void setFno(String fno) 
+    public void setFno(String fno)
     {
         this.fno = fno;
     }
 
-    public String getFno() 
+    public String getFno()
     {
         return fno;
     }
-    public void setLevel(String level) 
+    public void setLevel(String level)
     {
         this.level = level;
     }
 
-    public String getLevel() 
+    public String getLevel()
     {
         return level;
     }
-    public void setDtime(String dtime) 
+    public void setDtime(String dtime)
     {
         this.dtime = dtime;
     }
 
-    public String getDtime() 
+    public String getDtime()
     {
         return dtime;
     }
-    public void setDcity(String dcity) 
+    public void setDcity(String dcity)
     {
         this.dcity = dcity;
     }
 
-    public String getDcity() 
+    public String getDcity()
     {
         return dcity;
     }
-    public void setAtime(String atime) 
+    public void setAtime(String atime)
     {
         this.atime = atime;
     }
 
-    public String getAtime() 
+    public String getAtime()
     {
         return atime;
     }
-    public void setAcity(String acity) 
+    public void setAcity(String acity)
     {
         this.acity = acity;
     }
 
-    public String getAcity() 
+    public String getAcity()
     {
         return acity;
     }
-    public void setPrice(String price) 
+    public void setPrice(String price)
     {
         this.price = price;
     }
 
-    public String getPrice() 
+    public String getPrice()
     {
         return price;
     }
-    public void setSeat(String seat) 
+    public void setSeat(String seat)
     {
         this.seat = seat;
     }
 
-    public String getSeat() 
+    public String getSeat()
     {
         return seat;
     }
@@ -148,16 +161,17 @@ public class Tickets extends BaseEntity
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("ticketId", getTicketId())
-            .append("pname", getPname())
-            .append("fno", getFno())
-            .append("level", getLevel())
-            .append("dtime", getDtime())
-            .append("dcity", getDcity())
-            .append("atime", getAtime())
-            .append("acity", getAcity())
-            .append("price", getPrice())
-            .append("seat", getSeat())
-            .toString();
+                .append("ticketId", getTicketId())
+                .append("flightid", getFlightid())
+                .append("pname", getPname())
+                .append("fno", getFno())
+                .append("level", getLevel())
+                .append("dtime", getDtime())
+                .append("dcity", getDcity())
+                .append("atime", getAtime())
+                .append("acity", getAcity())
+                .append("price", getPrice())
+                .append("seat", getSeat())
+                .toString();
     }
 }

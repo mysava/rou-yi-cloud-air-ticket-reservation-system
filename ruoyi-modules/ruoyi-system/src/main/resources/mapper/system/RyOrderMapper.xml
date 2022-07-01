@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.RyOrderMapper">
+    
+    <resultMap type="RyOrder" id="RyOrderResult">
+        <result property="orderId"    column="order_id"    />
+        <result property="userName"    column="user_name"    />
+        <result property="flightno"    column="flightNo"    />
+        <result property="departtime"    column="departTime"    />
+        <result property="data"    column="data"    />
+        <result property="paymentamount"    column="paymentamount"    />
+    </resultMap>
+
+    <sql id="selectRyOrderVo">
+        select order_id, user_name, flightNo, departTime, data, paymentamount from ry_order
+    </sql>
+
+    <select id="selectRyOrderList" parameterType="RyOrder" resultMap="RyOrderResult">
+        <include refid="selectRyOrderVo"/>
+        <where>  
+            <if test="userName != null  and userName != ''"> and user_name like concat('%', #{userName}, '%')</if>
+            <if test="flightno != null  and flightno != ''"> and flightNo = #{flightno}</if>
+            <if test="departtime != null  and departtime != ''"> and departTime = #{departtime}</if>
+            <if test="data != null  and data != ''"> and data = #{data}</if>
+            <if test="paymentamount != null  and paymentamount != ''"> and paymentamount = #{paymentamount}</if>
+        </where>
+    </select>
+    
+    <select id="selectRyOrderByOrderId" parameterType="Long" resultMap="RyOrderResult">
+        <include refid="selectRyOrderVo"/>
+        where order_id = #{orderId}
+    </select>
+        
+    <insert id="insertRyOrder" parameterType="RyOrder" useGeneratedKeys="true" keyProperty="orderId">
+        insert into ry_order
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userName != null">user_name,</if>
+            <if test="flightno != null">flightNo,</if>
+            <if test="departtime != null">departTime,</if>
+            <if test="data != null">data,</if>
+            <if test="paymentamount != null">paymentamount,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userName != null">#{userName},</if>
+            <if test="flightno != null">#{flightno},</if>
+            <if test="departtime != null">#{departtime},</if>
+            <if test="data != null">#{data},</if>
+            <if test="paymentamount != null">'1000',</if>
+         </trim>
+    </insert>
+
+    <update id="updateRyOrder" parameterType="RyOrder">
+        update ry_order
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userName != null">user_name = #{userName},</if>
+            <if test="flightno != null">flightNo = #{flightno},</if>
+            <if test="departtime != null">departTime = #{departtime},</if>
+            <if test="data != null">data = #{data},</if>
+            <if test="paymentamount != null">paymentamount = #{paymentamount},</if>
+        </trim>
+        where order_id = #{orderId}
+    </update>
+
+    <delete id="deleteRyOrderByOrderId" parameterType="Long">
+        delete from ry_order where order_id = #{orderId}
+    </delete>
+
+    <delete id="deleteRyOrderByOrderIds" parameterType="String">
+        delete from ry_order where order_id in 
+        <foreach item="orderId" collection="array" open="(" separator="," close=")">
+            #{orderId}
+        </foreach>
+    </delete>
+</mapper>

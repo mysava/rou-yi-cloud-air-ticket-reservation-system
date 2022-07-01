@@ -143,20 +143,20 @@
             size="mini"
             type="text"
             icon="el-icon-edit"
-            @click="handleUpdate(scope.row)"
+            @click="toSub(scope.row)"
             v-hasPermi="['system:tickets:edit']"
-          >修改</el-button>
+          >改签</el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['system:tickets:remove']"
-          >删除</el-button>
+          >退票</el-button>
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -165,7 +165,7 @@
       @pagination="getList"
     />
 
-    <!-- 添加或修改机票管理对话框 -->
+    <!-- 添加或修改订单管理对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="乘客姓名" prop="pname">
@@ -223,7 +223,7 @@ export default {
       showSearch: true,
       // 总条数
       total: 0,
-      // 机票管理表格数据
+      // 订单管理表格数据
       ticketsList: [],
       // 弹出层标题
       title: "",
@@ -246,15 +246,14 @@ export default {
       // 表单参数
       form: {},
       // 表单校验
-      rules: {
-      }
+      rules: {}
     };
   },
   created() {
     this.getList();
   },
   methods: {
-    /** 查询机票管理列表 */
+    /** 查询订单管理列表 */
     getList() {
       this.loading = true;
       listTickets(this.queryParams).then(response => {
@@ -297,25 +296,37 @@ export default {
     // 多选框选中数据
     handleSelectionChange(selection) {
       this.ids = selection.map(item => item.ticketId)
-      this.single = selection.length!==1
+      this.single = selection.length !== 1
       this.multiple = !selection.length
     },
     /** 新增按钮操作 */
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加机票管理";
+      this.title = "添加订单管理";
+    },
+
+
+    toSub(row) {
+      const ticketIds = row.ticketId || this.ids;
+      this.$modal.confirm('是否改签订单编号为"' + ticketIds + '"的订单？').then(function () {
+      }).then(() => {
+        this.$router.push({path: '/system/amend', query: {id: row.ticketId}});
+      }).catch(() => {
+      });
+      // 跳转到子页面
+      //   this.$router.push({path: '/system/amend', query: {id: row.ticketId}});
     },
     /** 修改按钮操作 */
-    handleUpdate(row) {
-      this.reset();
-      const ticketId = row.ticketId || this.ids
-      getTickets(ticketId).then(response => {
-        this.form = response.data;
-        this.open = true;
-        this.title = "修改机票管理";
-      });
-    },
+    // handleUpdate(row) {
+    //   this.reset();
+    //   const ticketId = row.ticketId || this.ids
+    //   getTickets(ticketId).then(response => {
+    //     this.form = response.data;
+    //     this.open = true;
+    //     this.title = "修改订单管理";
+    //   });
+
     /** 提交按钮 */
     submitForm() {
       this.$refs["form"].validate(valid => {
@@ -339,12 +350,13 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ticketIds = row.ticketId || this.ids;
-      this.$modal.confirm('是否确认删除机票管理编号为"' + ticketIds + '"的数据项？').then(function() {
+      this.$modal.confirm('是否确认删除订单管理编号为"' + ticketIds + '"的数据项？').then(function () {
         return delTickets(ticketIds);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");
-      }).catch(() => {});
+      }).catch(() => {
+      });
     },
     /** 导出按钮操作 */
     handleExport() {

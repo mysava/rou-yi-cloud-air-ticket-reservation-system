@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.TicketsHistoryMapper">
+
+    <resultMap type="TicketsHistory" id="TicketsHistoryResult">
+        <result property="ticketId"    column="ticket_id"    />
+        <result property="flightid"    column="flightid"    />
+        <result property="pname"    column="pname"    />
+        <result property="fno"    column="fNo"    />
+        <result property="level"    column="level"    />
+        <result property="dtime"    column="dtime"    />
+        <result property="dcity"    column="dcity"    />
+        <result property="atime"    column="atime"    />
+        <result property="acity"    column="acity"    />
+        <result property="price"    column="price"    />
+        <result property="seat"    column="seat"    />
+    </resultMap>
+
+    <sql id="selectTicketsHistoryVo">
+        select ticket_id, flightid, pname, fNo, level, dtime, dcity, atime, acity, price, seat from tickets_history
+    </sql>
+
+    <select id="selectTicketsHistoryList" parameterType="TicketsHistory" resultMap="TicketsHistoryResult">
+        <include refid="selectTicketsHistoryVo"/>
+        <where>
+            <if test="flightid != null  and flightid != ''"> and flightid = #{flightid}</if>
+            <if test="pname != null  and pname != ''"> and pname like concat('%', #{pname}, '%')</if>
+            <if test="fno != null  and fno != ''"> and fNo = #{fno}</if>
+            <if test="level != null  and level != ''"> and level = #{level}</if>
+            <if test="dtime != null  and dtime != ''"> and dtime = #{dtime}</if>
+            <if test="dcity != null  and dcity != ''"> and dcity = #{dcity}</if>
+            <if test="atime != null  and atime != ''"> and atime = #{atime}</if>
+            <if test="acity != null  and acity != ''"> and acity = #{acity}</if>
+            <if test="price != null  and price != ''"> and price = #{price}</if>
+            <if test="seat != null  and seat != ''"> and seat = #{seat}</if>
+        </where>
+    </select>
+
+    <select id="selectTicketsHistoryByTicketId" parameterType="Long" resultMap="TicketsHistoryResult">
+        <include refid="selectTicketsHistoryVo"/>
+        where ticket_id = #{ticketId}
+    </select>
+
+    <insert id="insertTicketsHistory" parameterType="TicketsHistory" useGeneratedKeys="true" keyProperty="ticketId">
+        insert into tickets_history
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="flightid != null">flightid,</if>
+            <if test="pname != null">pname,</if>
+            <if test="fno != null">fNo,</if>
+            <if test="level != null">level,</if>
+            <if test="dtime != null">dtime,</if>
+            <if test="dcity != null">dcity,</if>
+            <if test="atime != null">atime,</if>
+            <if test="acity != null">acity,</if>
+            <if test="price != null">price,</if>
+            <if test="seat != null">seat,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="flightid != null">#{flightid},</if>
+            <if test="pname != null">#{pname},</if>
+            <if test="fno != null">#{fno},</if>
+            <if test="level != null">#{level},</if>
+            <if test="dtime != null">#{dtime},</if>
+            <if test="dcity != null">#{dcity},</if>
+            <if test="atime != null">#{atime},</if>
+            <if test="acity != null">#{acity},</if>
+            <if test="price != null">#{price},</if>
+            <if test="seat != null">#{seat},</if>
+        </trim>
+    </insert>
+
+    <update id="updateTicketsHistory" parameterType="TicketsHistory">
+        update tickets_history
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="flightid != null">flightid = #{flightid},</if>
+            <if test="pname != null">pname = #{pname},</if>
+            <if test="fno != null">fNo = #{fno},</if>
+            <if test="level != null">level = #{level},</if>
+            <if test="dtime != null">dtime = #{dtime},</if>
+            <if test="dcity != null">dcity = #{dcity},</if>
+            <if test="atime != null">atime = #{atime},</if>
+            <if test="acity != null">acity = #{acity},</if>
+            <if test="price != null">price = #{price},</if>
+            <if test="seat != null">seat = #{seat},</if>
+        </trim>
+        where ticket_id = #{ticketId}
+    </update>
+
+    <delete id="deleteTicketsHistoryByTicketId" parameterType="Long">
+        delete from tickets_history where ticket_id = #{ticketId}
+    </delete>
+
+    <delete id="deleteTicketsHistoryByTicketIds" parameterType="String">
+        delete from tickets_history where ticket_id in
+        <foreach item="ticketId" collection="array" open="(" separator="," close=")">
+            #{ticketId}
+        </foreach>
+    </delete>
+</mapper>

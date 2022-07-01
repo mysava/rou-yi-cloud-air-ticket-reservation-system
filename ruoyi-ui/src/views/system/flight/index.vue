@@ -17,6 +17,22 @@
           placeholder="请选择出发日期">
         </el-date-picker>
       </el-form-item>
+      <el-form-item label="出发时间" prop="departtime">
+        <el-input
+          v-model="queryParams.departtime"
+          placeholder="请输入出发时间"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="到达时间" prop="arrivetime">
+        <el-input
+          v-model="queryParams.arrivetime"
+          placeholder="请输入到达时间"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
       <el-form-item label="出发城市" prop="departurecityname">
         <el-input
           v-model="queryParams.departurecityname"
@@ -33,13 +49,61 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
+      <el-form-item label="商务舱数量" prop="vipNum">
+        <el-input
+          v-model="queryParams.vipNum"
+          placeholder="请输入商务舱数量"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="普通舱数量" prop="comNum">
+        <el-input
+          v-model="queryParams.comNum"
+          placeholder="请输入普通舱数量"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="商务舱价格" prop="vipPrice">
+        <el-input
+          v-model="queryParams.vipPrice"
+          placeholder="请输入商务舱价格"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="普通舱价格" prop="comPrice">
+        <el-input
+          v-model="queryParams.comPrice"
+          placeholder="请输入普通舱价格"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="剩余商务舱" prop="vipNumChange">
+        <el-input
+          v-model="queryParams.vipNumChange"
+          placeholder="请输入剩余商务舱"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="剩余普通舱" prop="comNumChange">
+        <el-input
+          v-model="queryParams.comNumChange"
+          placeholder="请输入剩余普通舱"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
       </el-form-item>
     </el-form>
 
-    <el-row :gutter="10" class="mb8" v-show="$store.state.user.name == 'admin'">
+    <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button
           type="primary"
@@ -87,6 +151,7 @@
 
     <el-table v-loading="loading" :data="flightList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
+      <el-table-column label="编号" align="center" prop="flightid" />
       <el-table-column label="航班编号" align="center" prop="flightno" />
       <el-table-column label="飞机型号" align="center" prop="aircrafttype" />
       <el-table-column label="出发日期" align="center" prop="departdate" width="180">
@@ -99,18 +164,27 @@
       <el-table-column label="出发城市" align="center" prop="departurecityname" />
       <el-table-column label="到达城市" align="center" prop="arrivecityname" />
       <el-table-column label="商务舱数量" align="center" prop="vipNum" />
-      <el-table-column label="商务舱价格" align="center" prop="vipPrice" />
       <el-table-column label="普通舱数量" align="center" prop="comNum" />
+      <el-table-column label="商务舱价格" align="center" prop="vipPrice" />
       <el-table-column label="普通舱价格" align="center" prop="comPrice" />
+      <el-table-column label="剩余商务舱" align="center" prop="vipNumChange" />
+      <el-table-column label="剩余普通舱" align="center" prop="comNumChange" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
             size="mini"
             type="text"
             icon="el-icon-edit"
-            @click="Orderdetail(scope.row)"
-            v-hasPermi="['system:flight:book']"
-          >预定</el-button>
+            @click="handleUpdate(scope.row)"
+            v-hasPermi="['system:flight:edit']"
+          >修改</el-button>
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-delete"
+            @click="handleDelete(scope.row)"
+            v-hasPermi="['system:flight:remove']"
+          >删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -123,8 +197,8 @@
       @pagination="getList"
     />
 
-    <!-- 添加或修改航班查询对话框 -->
-<!--    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
+    <!-- 添加或修改航班管理对话框 -->
+    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="航班编号" prop="flightno">
           <el-input v-model="form.flightno" placeholder="请输入航班编号" />
@@ -152,64 +226,24 @@
         <el-form-item label="商务舱数量" prop="vipNum">
           <el-input v-model="form.vipNum" placeholder="请输入商务舱数量" />
         </el-form-item>
-        <el-form-item label="商务舱价格" prop="vipPrice">
-          <el-input v-model="form.vipPrice" placeholder="请输入商务舱价格" />
-        </el-form-item>
         <el-form-item label="普通舱数量" prop="comNum">
           <el-input v-model="form.comNum" placeholder="请输入普通舱数量" />
+        </el-form-item>
+        <el-form-item label="商务舱价格" prop="vipPrice">
+          <el-input v-model="form.vipPrice" placeholder="请输入商务舱价格" />
         </el-form-item>
         <el-form-item label="普通舱价格" prop="comPrice">
           <el-input v-model="form.comPrice" placeholder="请输入普通舱价格" />
         </el-form-item>
-		<el-form-item label="剩余商务舱数量" prop="vipNumChange">
-		          <el-input v-model="form.vipNumChange" placeholder="请输入剩余商务舱数量" />
-		        </el-form-item>
-		        <el-form-item label="剩余普通舱数量" prop="comNumChange">
-		          <el-input v-model="form.comNumChange" placeholder="请输入剩余普通舱数量" />
-		        </el-form-item>
+        <el-form-item label="剩余商务舱" prop="vipNumChange">
+          <el-input v-model="form.vipNumChange" placeholder="请输入剩余商务舱" />
+        </el-form-item>
+        <el-form-item label="剩余普通舱" prop="comNumChange">
+          <el-input v-model="form.comNumChange" placeholder="请输入剩余普通舱" />
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
-        <el-button @click="cancel">取 消</el-button>
-      </div>
-    </el-dialog> -->
-
-	<!-- 预订航班对话框 -->
-   <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="乘客姓名" prop="pname">
-          <el-input v-model="form.pname" readonly />
-        </el-form-item>
-        <el-form-item label="航班编号" prop="fno">
-          <el-input v-model="form.fno" readonly />
-        </el-form-item>
-          <el-form-item label="飞机舱" prop="level">
-            <el-select v-model="form.level" placeholder="请选择飞机舱"  clearable :style="{width: '100%'}">
-              <el-option v-for="(item, index) in levelOptions" :key="index" :label="item.label"
-                         :value="item.value" :disabled="item.disabled"></el-option>
-            </el-select>
-          </el-form-item>
-        <el-form-item label="出发时间" prop="dtime">
-          <el-input v-model="form.dtime" readonly />
-        </el-form-item>
-        <el-form-item label="出发城市" prop="dcity">
-          <el-input v-model="form.dcity" readonly />
-        </el-form-item>
-        <el-form-item label="到达时间" prop="atime">
-          <el-input v-model="form.atime" readonly />
-        </el-form-item>
-        <el-form-item label="到达城市" prop="acity">
-          <el-input v-model="form.acity" readonly />
-        </el-form-item>
-        <el-form-item label="价格" prop="price">
-          <el-input v-model="form.price" readonly/>
-        </el-form-item>
-        <el-form-item label="剩余座位" prop="seat">
-          <el-input v-model="form.seat" readonly />
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="reserve" >确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
@@ -217,13 +251,10 @@
 </template>
 
 <script>
-import { listFlight, getFlight, delFlight, addFlight, updateFlight , bookFlight } from "@/api/system/flight";
-import {addTickets, updateTickets} from "@/api/system/tickets";
+import { listFlight, getFlight, delFlight, addFlight, updateFlight } from "@/api/system/flight";
 
 export default {
   name: "Flight",
-  components: {},
-  props: [],
   data() {
     return {
       // 遮罩层
@@ -238,14 +269,14 @@ export default {
       showSearch: true,
       // 总条数
       total: 0,
-      // 航班查询表格数据
+      // 航班管理表格数据
       flightList: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
       open: false,
       // 查询参数
-    queryParams: {
+      queryParams: {
         pageNum: 1,
         pageSize: 10,
         flightno: null,
@@ -263,49 +294,17 @@ export default {
         comNumChange: null
       },
       // 表单参数
-      form: {
-        level:''
-      },
+      form: {},
       // 表单校验
       rules: {
-        level: [{
-          required: true,
-          message: '请选择飞机舱',
-          trigger: 'change'
-        }],
-      },
-      levelOptions: [{
-        "label": "商务舱",
-        "value": "商务舱"
-      }, {
-        "label": "经济舱",
-        "value": "经济舱"
-      }]
+      }
     };
   },
   created() {
     this.getList();
   },
-  computed: {},
-  watch: {
-    'form.level':function (val){
-      if (val==="商务舱"){
-        this.form.price=this.form.vipPrice,
-		this.form.seat=this.form.vipNumChange,
-        this.form.comNumChange=null
-      }else {
-        this.form.price=this.form.comPrice,
-		this.form.seat=this.form.comNumChange,
-          this.form.vipNumChange=null
-      }
-}
-  },
-  mounted() {},
   methods: {
-    change(){
-      this.$forceUpdate()
-    },
-    /** 查询航班查询列表 */
+    /** 查询航班管理列表 */
     getList() {
       this.loading = true;
       listFlight(this.queryParams).then(response => {
@@ -319,7 +318,7 @@ export default {
       this.open = false;
       this.reset();
     },
-   // 表单重置
+    // 表单重置
     reset() {
       this.form = {
         flightid: null,
@@ -359,7 +358,7 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加航班查询";
+      this.title = "添加航班管理";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -368,23 +367,7 @@ export default {
       getFlight(flightid).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改航班查询";
-      });
-    },
-    Orderdetail(row) {
-      this.reset();
-      const flightid = row.flightid || this.ids
-      getFlight(flightid).then(response => {
-        this.form = response.data;
-        this.form.pname=this.$store.state.user.name;
-        this.form.fno=this.form.flightno;
-        this.form.ddate=this.form.departdate;
-        this.form.dtime=this.form.departtime;
-        this.form.dcity=this.form.departurecityname;
-        this.form.atime=this.form.arrivetime;
-        this.form.acity=this.form.arrivecityname;
-        this.open = true;
-        this.title = "预订航班";
+        this.title = "修改航班管理";
       });
     },
     /** 提交按钮 */
@@ -407,31 +390,10 @@ export default {
         }
       });
     },
-     reserve() {
-
-          this.$refs["form"].validate(valid => {
-            if (valid) {
-              bookFlight(this.form).then(response => {
-                this.$modal.msgSuccess("预定成功,座位-1");
-                this.open = false;
-                this.getList();
-                return response;
-              })
-                addTickets(this.form).then(response => {
-                  this.$modal.msgSuccess("预定成功，机票+1");
-                  this.open = false;
-                  this.getList();
-                  return response;
-                })
-              ;
-              }
-          });
-        },
-
     /** 删除按钮操作 */
     handleDelete(row) {
       const flightids = row.flightid || this.ids;
-      this.$modal.confirm('是否确认删除航班查询编号为"' + flightids + '"的数据项？').then(function() {
+      this.$modal.confirm('是否确认删除航班管理编号为"' + flightids + '"的数据项？').then(function() {
         return delFlight(flightids);
       }).then(() => {
         this.getList();
@@ -443,8 +405,7 @@ export default {
       this.download('system/flight/export', {
         ...this.queryParams
       }, `flight_${new Date().getTime()}.xlsx`)
-    },
-
-  },
+    }
+  }
 };
 </script>
